@@ -15,7 +15,8 @@ config :livechat, LivechatWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "fxxtuzFEuZIMDDaBfvV+KJmAtD2kGhfIMjkcrEOsOkiWevR7/djn8luYqGHE424Y",
   render_errors: [view: LivechatWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Livechat.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Livechat.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [signing_salt: "cIcfOzuW8vKohSjjLLg6TaHVaxBsfpZr"]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -24,6 +25,8 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :phoenix, :template_emgines, leex: Phoenix.LiveView.Engine
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
