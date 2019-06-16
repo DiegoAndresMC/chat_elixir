@@ -20,4 +20,32 @@ defmodule LivechatWeb.Live.Index do
       changeset: Chat.change_message(%Message{username: user_name})
     })
   end
+
+  def handle_event("validate", %{"menssage" => params}, socket) do
+    changeset =
+      %Message{}
+      |> Chat.change_message(params)
+      |> Map.put(:action, :insert)
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  def handle_event("send_message", %{"message" => params}, socket) do
+    case Chat.create_message(params) do
+      {:ok, message} ->
+        {:noreply, fetch(socket, message.username)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  def handle_info({Chat, [:message, _event_type], _message}, socket) do
+    {:noreply, fetch(socket, get_user_name(socket))}
+  end
+
+  defp get_user_name(socket) do
+    socket.assigns
+    |> Map.get(:user_name)
+  end
 end
